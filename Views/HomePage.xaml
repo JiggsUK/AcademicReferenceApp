@@ -1,0 +1,78 @@
+﻿<Page x:Class="RefCatalogue.Views.RefCatHome"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:fa5="http://schemas.fontawesome.com/icons/"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d"
+      d:DesignHeight="650" d:DesignWidth="800"
+      Title="RefCat - Home">
+
+    <Grid Margin="0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="30" MaxHeight="80" />
+            <RowDefinition Height="*" MinHeight="30" />
+            <RowDefinition Height="*" MinHeight="30" />
+            <RowDefinition Height="*" MinHeight="30" />
+            <RowDefinition Height="*" MinHeight="30" />
+        </Grid.RowDefinitions>
+        
+
+        <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FF00ABA9">Reference Catalogue</Label>
+
+        <Button Grid.Column="0" Grid.Row="1" Margin="200,10" MaxWidth="500" MaxHeight="200" MinWidth="200" MinHeight="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18" Background="#FF00ABA9" Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Click="ViewRefsClick" Padding="10,5" UseLayoutRounding="False">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Path Grid.Row="0" VerticalAlignment="Top" Width="40.25" Height="47" Canvas.Left="20" Canvas.Top="17" Stretch="Fill" Fill="White" Data="F1 M 35,51L 51,51L 43,43L 49.25,43L 60.25,53.5L 50.25,64L 43,64L 51,56L 35,56L 35,51 Z M 20,17L 43.25,17L 56,29.75L 56,47.75L 52,43.75L 52,34L 39,34L 39,21L 24,21L 24,55L 33.75,55L 34.75,59L 20,59L 20,17 Z M 43,22.25L 43,30L 50.75,30L 43,22.25 Z " />
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">
+                View and Export References
+                </TextBlock>
+            </Grid>
+        </Button>
+
+        <Button Grid.Column="0" Grid.Row="2" Margin="200,10" MaxWidth="500" MaxHeight="200" MinWidth="300" MinHeight="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"  Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Background="#FF00ABA9" Click="AddRefClick">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Path Grid.Row="0" VerticalAlignment="Top" Width="38" Height="38" Canvas.Left="19" Canvas.Top="19" Stretch="Fill" Fill="White" Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z " />
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">
+                Add Reference
+                </TextBlock>
+            </Grid>
+        </Button>
+        <Button Grid.Column="0" Grid.Row="3" Margin="200,10" MaxWidth="500" MaxHeight="200" MinWidth="300" MinHeight="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"  Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Background="#FF00ABA9" Click="UpdateRefClick">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Path Grid.Row="0" VerticalAlignment="Top" Width="34.8333" Height="41.1667" Canvas.Left="20.5833" Canvas.Top="17.4167" Stretch="Fill" Fill="White" Data="F1 M 38,20.5833C 42.9908,20.5833 47.4912,22.6825 50.6667,26.046L 50.6667,17.4167L 55.4166,22.1667L 55.4167,34.8333L 42.75,34.8333L 38,30.0833L 46.8512,30.0833C 44.6768,27.6539 41.517,26.125 38,26.125C 31.9785,26.125 27.0037,30.6068 26.2296,36.4167L 20.6543,36.4167C 21.4543,27.5397 28.9148,20.5833 38,20.5833 Z M 38,49.875C 44.0215,49.875 48.9963,45.3932 49.7703,39.5833L 55.3457,39.5833C 54.5457,48.4603 47.0852,55.4167 38,55.4167C 33.0092,55.4167 28.5088,53.3175 25.3333,49.954L 25.3333,58.5833L 20.5833,53.8333L 20.5833,41.1667L 33.25,41.1667L 38,45.9167L 29.1487,45.9167C 31.3231,48.3461 34.483,49.875 38,49.875 Z " />
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">
+                Update Reference
+                </TextBlock>
+            </Grid>
+        </Button>
+        <Button Grid.Column="0" Grid.Row="4" Margin="200,10" MaxWidth="500" MaxHeight="200" MinWidth="300" MinHeight="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"  Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Background="#FF00ABA9" Click="DeleteRefClick">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Path Grid.Row="0" VerticalAlignment="Top" Width="32" Height="32" Canvas.Left="22" Canvas.Top="22" Stretch="Fill" Fill="White" Data="F1 M 22,54L 22,22L 54,22L 54,54L 22,54 Z M 26,26L 26,50L 50,50L 50,26L 26,26 Z M 30.755,27.65L 38,34.895L 45.2449,27.6501L 48.3499,30.7551L 41.105,38L 48.35,45.245L 45.245,48.35L 38,41.105L 30.755,48.35L 27.65,45.245L 34.895,38L 27.65,30.755L 30.755,27.65 Z " />
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">
+                Delete Reference
+                </TextBlock>
+            </Grid>
+        </Button>
+    </Grid>
+</Page>

@@ -1,0 +1,74 @@
+﻿<Page x:Class="RefCatalogue.Views.UpdateRFC"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:local="clr-namespace:RefCatalogue.Views"
+      mc:Ignorable="d"
+      d:DesignHeight="650" d:DesignWidth="800"
+      Title="Update RFC">
+
+    <Page.Background>
+        <SolidColorBrush Color="#FFFFF7EF" Opacity="0.4" />
+    </Page.Background>
+
+    <Grid Name="UpdateRFCPage">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height="*" MaxHeight="40" />
+            <RowDefinition Height="*" MaxHeight="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" MaxHeight="40" />
+            <RowDefinition Height="*" MaxHeight="40" />
+            <RowDefinition Height="*" MaxHeight="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" MaxHeight="50" />
+            <RowDefinition Height="*" MaxHeight="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+
+        <!-- Design Elements -->
+        <Rectangle Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Fill="{StaticResource MahApps.Brushes.Accent4}" Stroke="{StaticResource MahApps.Brushes.Accent}" ></Rectangle>
+        <Rectangle Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="3" Fill="{StaticResource MahApps.Brushes.Accent4}" Stroke="{StaticResource MahApps.Brushes.Accent}"></Rectangle>
+        <Rectangle Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" Grid.RowSpan="2" Fill="{StaticResource MahApps.Brushes.Accent4}" Stroke="{StaticResource MahApps.Brushes.Accent}"></Rectangle>
+
+        <!-- Form Elements -->
+
+        <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  FontSize="28" FontWeight="Bold" Foreground="#FF00ABA9" Padding="0, 15, 0, 0">Update RFC</Label>
+
+        <TextBox Name="RFCArticleTitle" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"   VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Stretch" Margin="5" MinWidth="300" mah:TextBoxHelper.Watermark="RFC Title" />
+
+        <TextBox Name="RFCDocNumber" Grid.Column="2" Grid.Row="2"  VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="RFC Number" />
+
+        <TextBox Name="RFCYear" Grid.Column="1" Grid.Row="2"  VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MaxLength="4" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Year" />
+
+        <TextBox Name="RFC1first"  Grid.Column="1" Grid.Row="4"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author First Name" />
+        <TextBox Name="RFC1surname"  Grid.Column="2" Grid.Row="4"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0"  MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author Surname" />
+
+        <TextBox Name="RFC2first"  Grid.Column="1" Grid.Row="5"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author First Name" />
+        <TextBox Name="RFC2surname"  Grid.Column="2" Grid.Row="5"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author Surname" />
+
+        <TextBox Name="RFC3first"   Grid.Column="1" Grid.Row="6"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author First Name" />
+        <TextBox Name="RFC3surname"  Grid.Column="2" Grid.Row="6"    VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Author Surname" />
+
+        <TextBox Name="webURL" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="8"   VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Stretch" Margin="5" MinWidth="300" mah:TextBoxHelper.Watermark="RFC URL" />
+
+        <mah:DateTimePicker Name="accessDate" Grid.Column="1" Grid.Row="9" HorizontalAlignment="Stretch" Margin="5"  VerticalAlignment="Center" FirstDayOfWeek="Monday" SelectedDateFormat="Long" MinWidth="100" mah:TextBoxHelper.Watermark="Accessed Date"></mah:DateTimePicker>
+
+        <Viewbox Grid.Column="1" Grid.Row="10" Stretch="Uniform" StretchDirection="Both" MaxHeight="40">
+            <Button MinWidth="100" HorizontalAlignment="Center" Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Click="Button_Click_Update">Save</Button>
+        </Viewbox>
+
+        <Viewbox Grid.Column="2" Grid.Row="10" Stretch="Uniform" StretchDirection="Both" MaxHeight="40">
+            <Button MinWidth="100" HorizontalAlignment="Center" Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Click="Button_Click_Cancel" IsCancel="True">Cancel</Button>
+        </Viewbox>
+    </Grid>
+</Page>
