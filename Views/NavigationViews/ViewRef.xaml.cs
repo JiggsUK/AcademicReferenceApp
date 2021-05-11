@@ -16,7 +16,6 @@ namespace RefCatalogue.Views
         private DataTable refsForExport;
         private DataView allRefs;
         private readonly IDataProcessor dataRetrieval;
-        //private ExporterTest export = new ExporterTest();
 
         public ViewRef(IDataProcessor dataRetrieval)
         {
@@ -64,7 +63,7 @@ namespace RefCatalogue.Views
             }
 
             var formattedrefs = Formatter.FormatEntries(refsForExport);
-            ExporterTest.ExportToWord(formattedrefs);
+            Exporter.ExportToWord(formattedrefs);
         }
     }
 }

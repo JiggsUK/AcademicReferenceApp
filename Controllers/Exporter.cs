@@ -1,198 +1,119 @@
-﻿//using System.Data;
-//using System.Linq;
-//using Word = Microsoft.Office.Interop.Word;
-//using DocumentFormat.OpenXml.Packaging;
-//using DocumentFormat.OpenXml.Wordprocessing;
-//using System.Collections.Generic;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml;
 
-//namespace RefCatalogue.Controllers
-//{
-//    internal class Exporter
-//    {
-//        private Paragraph para { get; set; }
-//        List<Run> refToExport = new List<Run>();
+namespace RefCatalogue.Controllers
+{
+    internal class Exporter
+    {
+        public static void ExportToWord(string[,] referenceList)
+        {
+            // Open a WordprocessingDocument for editing using the file path.
+            WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(@"C:\Projects\RefCatalogue\Reference.docx", true);
+            // Assign a reference to the existing document body.
+            Body body = wordprocessingDocument.MainDocumentPart.Document.Body;
 
-//        public Exporter()
-//        {
-//            // Open a WordprocessingDocument for editing using the filepath.
-//            WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open("Reference.docx", true);
-//            // Assign a reference to the existing document body.
-//            Body body = wordprocessingDocument.MainDocumentPart.Document.Body;
-            
-            
-//        }
+            for (int i = 0; i <= referenceList.GetLength(0) - 1; i++)
+            {
+                Paragraph para = body.AppendChild(new Paragraph());
+                string reference = referenceList[i, 1];
+                if (referenceList[i, 0] == "Book")
+                {
+                    // find the index to start italics - the closing bracket on the year attribute
+                    int italicStart = reference.IndexOf(')') + 2;
 
-//        public void ExportToWord(string[,] referenceList)
-//        {
-//            int prevParagraphsTotalLength = 0;
-//            object missingValue = System.Reflection.Missing.Value;
-//            Word._Application wordApp;
-//            Word._Document document;
-//            wordApp = new Word.Application
-//            {
-//                Visible = true
-//            };
-//            document = wordApp.Documents.Add(ref missingValue, ref missingValue, ref missingValue, ref missingValue);
+                    // find the index to end the italics - 1st fullstop after the start index
+                    int italicEnd = reference.IndexOf('.', italicStart) + 1;
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else if (referenceList[i, 0] == "Journal")
+                {
+                    // find the index to start italics - the 1st apostrophe/comma combo (',)
+                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
 
-//            for (int i = 0; i <= referenceList.GetLength(0) - 1; i++)
-//            {
-//                if (referenceList[i, 0] == "Book")
-//                {
-//                    ExportBooks(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else if (referenceList[i, 0] == "Journal")
-//                {
-//                    ExportJournals(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else if (referenceList[i, 0] == "Conf Paper")
-//                {
-//                    ExportConfPapers(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else if (referenceList[i, 0] == "Website")
-//                {
-//                    ExportWebsite(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else if (referenceList[i, 0] == "Blog")
-//                {
-//                    ExportBlog(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else if (referenceList[i, 0] == "RFC")
-//                {
-//                    ExportRFC(referenceList, prevParagraphsTotalLength, missingValue, document, i);
-//                }
-//                else
-//                {
-//                    Run run = para.AppendChild(new Run());
-//                    var txt = referenceList[i, 1];
-//                    run.AppendChild(new Text(txt));
-//                    refToExport.Add(run);
+                    // find the index to end the italics - 1st comma after the start index
+                    int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else if (referenceList[i, 0] == "Conf Paper")
+                {
+                    // find the index to start italics - the 1st apostrophe/comma combo (',)
+                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
 
-//                    Word.Paragraph paragraph;
-//                    paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//                    paragraph.Range.Text = referenceList[i, 1];
-//                    paragraph.Range.InsertParagraphAfter();
-//                }
+                    // find the index to end the italics - 1st fullstop after the start index
+                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else if (referenceList[i, 0] == "Website")
+                {
+                    // find the index to start italics - the closing bracket on the year attribute
+                    int italicStart = referenceList[i, 1].IndexOf(')') + 1;
 
-//                prevParagraphsTotalLength = (referenceList[i, 1].Length + 1) + prevParagraphsTotalLength;
-//            }
-//        }
+                    // find the index to end the italics - 1st fullstop after the start index
+                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else if (referenceList[i, 0] == "Blog")
+                {
+                    // find the index to start italics - the 1st apostrophe/comma combo (',)
+                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
 
-//        private void ExportBooks(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            Run run = para.AppendChild(new Run());
-//            string txt = referenceList[i, 1];
+                    // find the index to end the italics - 1st fullstop after the start index
+                    int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else if (referenceList[i, 0] == "RFC")
+                {
+                    // find the index to start italics - the closing bracket on the year attribute
+                    int italicStart = referenceList[i, 1].IndexOf(')') + 1;
 
-//            // find the index to start italics - the closing bracket on the year attribute
-//            int italicStart = txt.IndexOf(')') + 1;
+                    // find the index to end the italics - 1st fullstop after the start index
+                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    AddRuns(italicStart, italicEnd, reference, i, para);
+                }
+                else
+                {
+                    Run run = para.AppendChild(new Run());
+                    Text txt = new Text
+                    {
+                        Text = referenceList[i, 1],
+                        Space = SpaceProcessingModeValues.Preserve
+                    };
+                    run.AppendChild(txt);
+                }
+            }
 
-//            // find the index to end the italics - 1st fullstop after the start index
-//            int italicEnd = txt.IndexOf('.', italicStart);
+            wordprocessingDocument.Close();
+        }
 
-//            string normalPreText = txt[0..(italicStart - 1)];
-//            string italicText = txt[italicStart..(italicEnd - italicStart)];
-//            string normalPostText = txt[italicEnd..];
+        public static void AddRuns(int italicStart, int italicEnd, string txt, int i, Paragraph para)
+        {
+            Run preItalics = para.AppendChild(new Run());
+            Run italics = para.AppendChild(new Run());
+            Run postItalics = para.AppendChild(new Run());
 
-//            run.AppendChild(new Text(normalPreText));
-//            run.AppendChild(new Text(normalPostText));
+            Text normalPreText = new Text
+            {
+                Text = txt[0..italicStart],
+                Space = SpaceProcessingModeValues.Preserve
+            };
 
-//            RunProperties runProperties = run.PrependChild(new RunProperties(new Italic()));
-//            run.PrependChild(new Text(italicText));
-//            refToExport.Add(run);
+            Text italicText = new Text
+            {
+                Text = txt[italicStart..italicEnd],
+                Space = SpaceProcessingModeValues.Preserve
+            };
 
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
+            Text normalPostText = new Text
+            {
+                Text = txt[italicEnd..],
+                Space = SpaceProcessingModeValues.Preserve
+            };
 
-//            // select the relevant text and italicise it
-//            Word.Range textToItalicse = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            textToItalicse.Select();
-//            textToItalicse.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-
-//        private static void ExportJournals(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            // find the index to start italics - the 1st apostrophe/comma combo (',)
-//            int italicStart = referenceList[i, 1].IndexOf("',") + 2;
-
-//            // find the index to end the italics - 1st comma after the start index
-//            int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
-
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
-//            Word.Range italics = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            italics.Select();
-//            italics.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-
-//        private static void ExportConfPapers(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            // find the index to start italics - the 1st apostrophe/comma combo (',)
-//            int italicStart = referenceList[i, 1].IndexOf("',") + 2;
-
-//            // find the index to end the italics - 1st fullstop after the start index
-//            int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
-
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
-//            Word.Range italics = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            italics.Select();
-//            italics.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-
-//        private static void ExportWebsite(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            // find the index to start italics - the closing bracket on the year attribute
-//            int italicStart = referenceList[i, 1].IndexOf(')') + 1;
-
-//            // find the index to end the italics - 1st fullstop after the start index
-//            int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
-
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
-//            Word.Range italics = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            italics.Select();
-//            italics.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-
-//        private static void ExportBlog(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            // find the index to start italics - the 1st apostrophe/comma combo (',)
-//            int italicStart = referenceList[i, 1].IndexOf("',") + 2;
-
-//            // find the index to end the italics - 1st fullstop after the start index
-//            int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
-
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
-//            Word.Range italics = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            italics.Select();
-//            italics.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-
-//        private static void ExportRFC(string[,] referenceList, int prevParagraphsTotalLength, object missingValue, Word._Document document, int i)
-//        {
-//            // find the index to start italics - the closing bracket on the year attribute
-//            int italicStart = referenceList[i, 1].IndexOf(')') + 1;
-
-//            // find the index to end the italics - 1st fullstop after the start index
-//            int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
-
-//            Word.Paragraph paragraph;
-//            paragraph = document.Content.Paragraphs.Add(ref missingValue);
-//            paragraph.Range.Text = referenceList[i, 1];
-//            Word.Range italics = document.Range(italicStart + prevParagraphsTotalLength, italicEnd + prevParagraphsTotalLength);
-//            italics.Select();
-//            italics.Font.Italic = 1;
-//            paragraph.Range.InsertParagraphAfter();
-//        }
-//    }
-//}
+            preItalics.AppendChild(normalPreText);
+            RunProperties runProperties = italics.AppendChild(new RunProperties(new Italic()));
+            italics.AppendChild(italicText);
+            postItalics.AppendChild(normalPostText);
+        }
+    }
+}
