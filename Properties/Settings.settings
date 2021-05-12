@@ -7,7 +7,7 @@
 &lt;SerializableConnectionString xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
   &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\RefCatalogue\RefCatDb.mdf;Integrated Security=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\me762\RiderProjects\RefCatalogue\RefCatDb.mdf;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\RefCatalogue\RefCatDb.mdf;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
