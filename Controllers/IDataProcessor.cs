@@ -13,7 +13,7 @@ namespace RefCatalogue.Controllers
 
         int PushJournalDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
-        int PushRFCDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
+        int PushRfcDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
         int PushWebsiteDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
