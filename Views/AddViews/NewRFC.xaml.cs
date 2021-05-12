@@ -49,7 +49,7 @@ namespace RefCatalogue.Views.AddViews
                 { "accessDate", ((DateTime)accessDate.SelectedDateTime).ToString("dd MMMM yyyy")},
             };
 
-            var result = dataProcessor.PushRFCDetailsToDatabase(rfcDetails, Task);
+            var result = dataProcessor.PushRfcDetailsToDatabase(rfcDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"Successfully added {RFCArticleTitle.Text}.", "Add New RFC", MessageBoxButton.OK);
