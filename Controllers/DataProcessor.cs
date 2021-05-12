@@ -8,21 +8,21 @@ namespace RefCatalogue.Controllers
 {
     internal class DataProcessor : IDataProcessor
     {
-        private readonly string[] RefTypes = new string[] { "Book", "ConfPaper", "RFC", "Website", "Blog", "Journal" };
+        private readonly string[] RefTypes = new[] { "Book", "ConfPaper", "RFC", "Website", "Blog", "Journal" };
 
         public DataTable SelectAll(DataTable data)
         {
             using var con = new SqlConnection(Settings.Default.ConnectionString);
             con.Open();
 
-            foreach (string type in RefTypes)
+            foreach (var type in RefTypes)
             {
                 using var cmd = new SqlCommand($"dbo.{type}_Select_All", con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                using SqlDataAdapter da = new SqlDataAdapter(cmd);
+                using var da = new SqlDataAdapter(cmd);
                 da.Fill(data);
             }
 
@@ -42,7 +42,14 @@ namespace RefCatalogue.Controllers
 
             cmd.ExecuteNonQuery();
         }
-
+        
+        public DataView RetrieveAllReferences()
+        {
+            var dt = new DataTable("allRefs");
+            var allRefs = SelectAll(dt).DefaultView;
+            dt.DefaultView.Sort = "Author1SN asc";
+            return allRefs;
+        }
         public int PushBookDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom)
         {
             try
@@ -184,6 +191,7 @@ namespace RefCatalogue.Controllers
                 }
 
                 cmd.Parameters.Add("@webpagetitle", SqlDbType.VarChar).Value = webDetails["webpagetitle"];
+                cmd.Parameters.Add("@organisation", SqlDbType.VarChar).Value = String.IsNullOrEmpty(webDetails["web1first"]) ? (object)DBNull.Value : webDetails["web1first"];
                 cmd.Parameters.Add("@author1FN", SqlDbType.VarChar).Value = String.IsNullOrEmpty(webDetails["web1first"]) ? (object)DBNull.Value : webDetails["web1first"];
                 cmd.Parameters.Add("@author1SN", SqlDbType.VarChar).Value = String.IsNullOrEmpty(webDetails["web1last"]) ? (object)DBNull.Value : webDetails["web1last"];
                 cmd.Parameters.Add("@author2FN", SqlDbType.VarChar).Value = String.IsNullOrEmpty(webDetails["web2first"]) ? (object)DBNull.Value : webDetails["web2first"];

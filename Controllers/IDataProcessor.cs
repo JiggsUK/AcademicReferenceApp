@@ -20,5 +20,6 @@ namespace RefCatalogue.Controllers
         int PushBlogDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
         void DeleteReference(string id, string tableName);
+        DataView RetrieveAllReferences();
     }
 }
