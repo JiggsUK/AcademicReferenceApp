@@ -1,12 +1,10 @@
-﻿using RefCatalogue.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.NavigationViews
 {
     /// <summary>
     /// Interaction logic for ViewRef.xaml
@@ -15,26 +13,17 @@ namespace RefCatalogue.Views
     {
         private DataTable refsForExport;
         private DataView allRefs;
-        private readonly IDataProcessor dataRetrieval;
 
         public ViewRef(IDataProcessor dataRetrieval)
         {
             InitializeComponent();
-            this.dataRetrieval = dataRetrieval ?? throw new ArgumentNullException(nameof(dataRetrieval));
-            refListData.ItemsSource = RetrieveAllReferences();
+            allRefs = dataRetrieval.RetrieveAllReferences();
+            refListData.ItemsSource = allRefs;
         }
-
-        public DataView RetrieveAllReferences()
-        {
-            DataTable dt = new DataTable("allRefs");
-            allRefs = dataRetrieval.SelectAll(dt).DefaultView;
-            dt.DefaultView.Sort = "Author1SN asc";
-            return allRefs;
-        }
-
+        
         private void Button_Click_GoBack(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
 
         private void Button_Click_Export(object sender, RoutedEventArgs e)
@@ -43,20 +32,12 @@ namespace RefCatalogue.Views
 
             if (refListData.SelectedItems.Count > 0)
             {
-                List<DataRowView> sortedReferences = new List<DataRowView>();
-                foreach (DataRowView item in refListData.Items)
-                {
-                    if (refListData.SelectedItems.Contains(item))
-                    {
-                        sortedReferences.Add(item);
-                    }
-                }
+                var sortedReferences = refListData.Items.Cast<DataRowView>().Where(item => refListData.SelectedItems.Contains(item)).ToList();
 
                 refsForExport.Clear();
 
-                foreach (DataRowView rowView in sortedReferences)
+                foreach (var row in sortedReferences.Select(rowView => rowView.Row))
                 {
-                    DataRow row = rowView.Row;
                     refsForExport.ImportRow(row);
                     refsForExport.AcceptChanges();
                 }
