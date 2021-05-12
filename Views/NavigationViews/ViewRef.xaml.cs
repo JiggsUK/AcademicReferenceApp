@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using RefCatalogue.Controllers;
 
 namespace RefCatalogue.Views.NavigationViews
@@ -28,6 +29,8 @@ namespace RefCatalogue.Views.NavigationViews
 
         private void Button_Click_Export(object sender, RoutedEventArgs e)
         {
+            var filename = GetSaveFilename();
+            
             refsForExport = allRefs.ToTable();
 
             if (refListData.SelectedItems.Count > 0)
@@ -44,7 +47,14 @@ namespace RefCatalogue.Views.NavigationViews
             }
 
             var formattedrefs = Formatter.FormatEntries(refsForExport);
-            Exporter.ExportToWord(formattedrefs);
+            Exporter.ExportToWord(formattedrefs, filename);
+        }
+
+        private static string GetSaveFilename()
+        {
+            var saveFile = new SaveFileDialog {Filter = "Word File (.docx ,.doc)|*.docx;*.doc"};
+            saveFile.ShowDialog();
+            return saveFile.FileName;
         }
     }
 }

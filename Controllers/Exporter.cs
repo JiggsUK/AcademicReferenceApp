@@ -1,80 +1,87 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using System;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 
 namespace RefCatalogue.Controllers
 {
-    internal class Exporter
+    internal static class Exporter
     {
-        public static void ExportToWord(string[,] referenceList)
+        public static void ExportToWord(string[,] referenceList, string filename)
         {
             // Open a WordprocessingDocument for editing using the file path.
-            WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(@"C:\Projects\RefCatalogue\Reference.docx", true);
+            var wordDoc =
+                WordprocessingDocument.Create(filename, WordprocessingDocumentType.Document, true);
             // Assign a reference to the existing document body.
-            Body body = wordprocessingDocument.MainDocumentPart.Document.Body;
+            MainDocumentPart mainPart = wordDoc.AddMainDocumentPart();
 
-            for (int i = 0; i <= referenceList.GetLength(0) - 1; i++)
+            // Create the document structure and add some text.
+            mainPart.Document = new Document();
+            Body body = mainPart.Document.AppendChild(new Body());
+            //var body = wordprocessingDocument.MainDocumentPart.Document.Body;
+
+            for (var i = 0; i <= referenceList.GetLength(0) - 1; i++)
             {
-                Paragraph para = body.AppendChild(new Paragraph());
-                string reference = referenceList[i, 1];
+                var para = body.AppendChild(new Paragraph());
+                var reference = referenceList[i, 1];
                 if (referenceList[i, 0] == "Book")
                 {
                     // find the index to start italics - the closing bracket on the year attribute
-                    int italicStart = reference.IndexOf(')') + 2;
+                    var italicStart = reference.IndexOf(')') + 2;
 
                     // find the index to end the italics - 1st fullstop after the start index
-                    int italicEnd = reference.IndexOf('.', italicStart) + 1;
+                    var italicEnd = reference.IndexOf('.', italicStart) + 1;
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else if (referenceList[i, 0] == "Journal")
                 {
                     // find the index to start italics - the 1st apostrophe/comma combo (',)
-                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
+                    var italicStart = referenceList[i, 1].IndexOf("',", StringComparison.Ordinal) + 2;
 
                     // find the index to end the italics - 1st comma after the start index
-                    int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
+                    var italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else if (referenceList[i, 0] == "Conf Paper")
                 {
                     // find the index to start italics - the 1st apostrophe/comma combo (',)
-                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
+                    var italicStart = referenceList[i, 1].IndexOf("',") + 2;
 
                     // find the index to end the italics - 1st fullstop after the start index
-                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    var italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else if (referenceList[i, 0] == "Website")
                 {
                     // find the index to start italics - the closing bracket on the year attribute
-                    int italicStart = referenceList[i, 1].IndexOf(')') + 1;
+                    var italicStart = referenceList[i, 1].IndexOf(')') + 1;
 
                     // find the index to end the italics - 1st fullstop after the start index
-                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    var italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else if (referenceList[i, 0] == "Blog")
                 {
                     // find the index to start italics - the 1st apostrophe/comma combo (',)
-                    int italicStart = referenceList[i, 1].IndexOf("',") + 2;
+                    var italicStart = referenceList[i, 1].IndexOf("',") + 2;
 
                     // find the index to end the italics - 1st fullstop after the start index
-                    int italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
+                    var italicEnd = referenceList[i, 1].IndexOf(',', italicStart);
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else if (referenceList[i, 0] == "RFC")
                 {
                     // find the index to start italics - the closing bracket on the year attribute
-                    int italicStart = referenceList[i, 1].IndexOf(')') + 1;
+                    var italicStart = referenceList[i, 1].IndexOf(')') + 1;
 
                     // find the index to end the italics - 1st fullstop after the start index
-                    int italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
+                    var italicEnd = referenceList[i, 1].IndexOf('.', italicStart);
                     AddRuns(italicStart, italicEnd, reference, i, para);
                 }
                 else
                 {
-                    Run run = para.AppendChild(new Run());
-                    Text txt = new Text
+                    var run = para.AppendChild(new Run());
+                    var txt = new Text
                     {
                         Text = referenceList[i, 1],
                         Space = SpaceProcessingModeValues.Preserve
@@ -82,36 +89,36 @@ namespace RefCatalogue.Controllers
                     run.AppendChild(txt);
                 }
             }
-
-            wordprocessingDocument.Close();
+            wordDoc.Save();
+            wordDoc.Close();
         }
 
-        public static void AddRuns(int italicStart, int italicEnd, string txt, int i, Paragraph para)
+        private static void AddRuns(int italicStart, int italicEnd, string txt, int i, Paragraph para)
         {
-            Run preItalics = para.AppendChild(new Run());
-            Run italics = para.AppendChild(new Run());
-            Run postItalics = para.AppendChild(new Run());
+            var preItalics = para.AppendChild(new Run());
+            var italics = para.AppendChild(new Run());
+            var postItalics = para.AppendChild(new Run());
 
-            Text normalPreText = new Text
+            var normalPreText = new Text
             {
-                Text = txt[0..italicStart],
+                Text = txt[..italicStart],
                 Space = SpaceProcessingModeValues.Preserve
             };
 
-            Text italicText = new Text
+            var italicText = new Text
             {
                 Text = txt[italicStart..italicEnd],
                 Space = SpaceProcessingModeValues.Preserve
             };
 
-            Text normalPostText = new Text
+            var normalPostText = new Text
             {
                 Text = txt[italicEnd..],
                 Space = SpaceProcessingModeValues.Preserve
             };
 
             preItalics.AppendChild(normalPreText);
-            RunProperties runProperties = italics.AppendChild(new RunProperties(new Italic()));
+            var runProperties = italics.AppendChild(new RunProperties(new Italic()));
             italics.AppendChild(italicText);
             postItalics.AppendChild(normalPostText);
         }
