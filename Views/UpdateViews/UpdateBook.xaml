@@ -1,10 +1,9 @@
-﻿<Page x:Class="RefCatalogue.Views.UpdateBook"
+﻿<Page x:Class="RefCatalogue.Views.UpdateViews.UpdateBook"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-      xmlns:local="clr-namespace:RefCatalogue.Views"
       mc:Ignorable="d"
       d:DesignHeight="650" d:DesignWidth="800"
       Title="Update Book">
@@ -46,7 +45,7 @@
         <!-- Form Elements -->
         <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF00ABA9" FontSize="28" FontWeight="Bold" Padding="0,5,0,0">Update Book</Label>
 
-        <TextBox Name="bookTitle" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Stretch" Margin="5" MinWidth="200" SpellCheck.IsEnabled="True" mah:TextBoxHelper.Watermark="Book Title" />
+        <TextBox Name="BookTitle" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" VerticalContentAlignment="Center" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Stretch" Margin="5" MinWidth="200" SpellCheck.IsEnabled="True" mah:TextBoxHelper.Watermark="Book Title" />
 
         <TextBox Name="Year" Grid.Column="1" Grid.Row="4"   VerticalContentAlignment="Center" VerticalAlignment="Center"   Padding="0" MaxLength="4" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" mah:TextBoxHelper.Watermark="Year" />
 

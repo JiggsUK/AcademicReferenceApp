@@ -1,19 +1,18 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.AddViews
 {
     /// <summary>
     /// Interaction logic for RefReport.xaml
     /// </summary>
-    public partial class NewBook : Page
+    public partial class NewBook
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
+        private readonly DataProcessor dataProcessor = new();
+        private const string Task = "dbo.Add_Book";
 
         public NewBook()
         {
@@ -27,7 +26,7 @@ namespace RefCatalogue.Views
                 return;
             }
 
-            string task = "dbo.Add_Book";
+            
 
             var bookDetails = new Dictionary<string, string>
             {
@@ -46,7 +45,7 @@ namespace RefCatalogue.Views
                 { "edition", Edition.Text }
             };
 
-            var result = dataProcessor.PushBookDetailsToDatabase(bookDetails, task);
+            var result = dataProcessor.PushBookDetailsToDatabase(bookDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"{bookTitle.Text} successfully added.", "Add New Book", MessageBoxButton.OK);
@@ -56,12 +55,12 @@ namespace RefCatalogue.Views
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
 
         private bool CheckForErrors()
         {
-            TextBox[] requiredTextboxes = new TextBox[]
+            var requiredTextboxes = new[]
             {
                 bookTitle,
                 Author1FirstName,
@@ -69,7 +68,7 @@ namespace RefCatalogue.Views
                 Year
             };
 
-            List<string> errors = FormHelper.ValidateTextboxes(requiredTextboxes);
+            var errors = FormHelper.ValidateTextboxes(requiredTextboxes);
             if (errors.Any())
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Missing Required Fields", MessageBoxButton.OK);

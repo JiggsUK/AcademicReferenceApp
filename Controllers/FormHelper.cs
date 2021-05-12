@@ -1,25 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace RefCatalogue
+namespace RefCatalogue.Controllers
 {
-    internal class FormHelper
+    internal static class FormHelper
     {
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T t)
+                    var child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
                     {
                         yield return t;
                     }
 
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    foreach (var childOfChild in FindVisualChildren<T>(child))
                     {
                         yield return childOfChild;
                     }
@@ -29,7 +30,7 @@ namespace RefCatalogue
 
         public static void ClearAllTextboxes(Grid gridToClear)
         {
-            foreach (TextBox item in FindVisualChildren<TextBox>(gridToClear))
+            foreach (var item in FindVisualChildren<TextBox>(gridToClear))
             {
                 item.Clear();
             }
@@ -37,16 +38,7 @@ namespace RefCatalogue
 
         public static List<string> ValidateTextboxes(TextBox[] requiredTextboxes)
         {
-            List<string> errors = new List<string>();
-            foreach (TextBox box in requiredTextboxes)
-            {
-                if (string.IsNullOrEmpty(box.Text))
-                {
-                    errors.Add($"{box.Name} is required.");
-                }
-            }
-
-            return errors;
+            return (from box in requiredTextboxes where string.IsNullOrEmpty(box.Text) select $"{box.Name} is required.").ToList();
         }
     }
 }

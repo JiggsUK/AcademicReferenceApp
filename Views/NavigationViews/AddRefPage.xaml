@@ -1,4 +1,4 @@
-﻿<Page x:Class="RefCatalogue.Views.AddRefPage"
+﻿<Page x:Class="RefCatalogue.Views.NavigationViews.AddRefPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -76,7 +76,7 @@
                     </TextBlock>
                 </Grid>
             </Button>
-            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" FontSize="18"  Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Background="#FF00ABA9" Click="AddRFCClick">
+            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" FontSize="18"  Style="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}" Background="#FF00ABA9" Click="AddRfcClick">
                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>

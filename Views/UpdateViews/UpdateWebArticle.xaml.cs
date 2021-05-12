@@ -1,60 +1,61 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
+using RefCatalogue.Views.NavigationViews;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.UpdateViews
 {
     /// <summary>
     /// Interaction logic for UpdateWebArticle.xaml
     /// </summary>
     public partial class UpdateWebArticle : Page
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
-        private DataRow refToUpdate;
+        private readonly DataProcessor _dataProcessor = new();
+        private DataRow _refToUpdate;
+        private const string Task = "dbo.Update_Website";
 
-        public UpdateWebArticle(DataRow refToUpdate)
+        public UpdateWebArticle(DataRow selectedRow)
         {
             InitializeComponent();
-            this.refToUpdate = refToUpdate;
-            LoadTextboxData(refToUpdate);
+            _refToUpdate = selectedRow;
+            LoadTextboxData(selectedRow);
         }
 
-        private void LoadTextboxData(DataRow refToUpdate)
+        private void LoadTextboxData(DataRow data)
         {
-            if (refToUpdate.Field<string>("RefType") == "Website")
+            if (data.Field<string>("RefType") == "Website")
             {
-                TextBox Author1Surname = string.IsNullOrEmpty(refToUpdate.Field<string>("Author1SN")) ? web1surname : organisation;
+                var author1Surname = !string.IsNullOrEmpty(data.Field<string>("Author1FN")) ? web1surname : organisation;
 
-                webArticleTitle.Text = refToUpdate.Field<string>("WebpageTitle");
-                web1first.Text = refToUpdate.Field<string>("Author1FN");
-                Author1Surname.Text = refToUpdate.Field<string>("Author1SN");
-                web2first.Text = refToUpdate.Field<string>("Author2FN");
-                web2surname.Text = refToUpdate.Field<string>("Author2SN");
-                web3first.Text = refToUpdate.Field<string>("Author3FN");
-                web3surname.Text = refToUpdate.Field<string>("Author3SN");
-                webpageYear.Text = refToUpdate.Field<int>("Year").ToString();
-                webURL.Text = refToUpdate.Field<string>("WebURL");
-                accessDate.SelectedDateTime = refToUpdate.Field<DateTime>("accessDate");
+                webArticleTitle.Text = data.Field<string>("WebpageTitle") ?? string.Empty;
+                web1first.Text = data.Field<string>("Author1FN") ?? string.Empty;
+                author1Surname.Text = data.Field<string>("Author1SN") ?? string.Empty;
+                web2first.Text = data.Field<string>("Author2FN") ?? string.Empty;
+                web2surname.Text = data.Field<string>("Author2SN") ?? string.Empty;
+                web3first.Text = data.Field<string>("Author3FN") ?? string.Empty;
+                web3surname.Text = data.Field<string>("Author3SN") ?? string.Empty;
+                webpageYear.Text = data.Field<int>("Year").ToString();
+                webURL.Text = data.Field<string>("WebURL") ?? string.Empty;
+                accessDate.SelectedDateTime = DateTime.Parse(data.Field<string>("accessDate") ?? string.Empty);
             }
             else
             {
-                webArticleTitle.Text = refToUpdate.Field<string>("WebpageTitle");
-                web1first.Text = refToUpdate.Field<string>("Author1FN");
-                web1surname.Text = refToUpdate.Field<string>("Author1SN");
-                web2first.Text = refToUpdate.Field<string>("Author2FN");
-                web2surname.Text = refToUpdate.Field<string>("Author2SN");
-                web3first.Text = refToUpdate.Field<string>("Author3FN");
-                web3surname.Text = refToUpdate.Field<string>("Author3SN");
-                webpageYear.Text = refToUpdate.Field<int>("Year").ToString();
-                webURL.Text = refToUpdate.Field<string>("WebURL");
-                accessDate.SelectedDateTime = refToUpdate.Field<DateTime>("accessDate");
-                blogSiteTitle.Text = refToUpdate.Field<string>("blogSiteTitle");
-                postedDate.SelectedDateTime = refToUpdate.Field<DateTime>("postedDate");
+                webArticleTitle.Text = data.Field<string>("WebpageTitle") ?? string.Empty;
+                web1first.Text = data.Field<string>("Author1FN") ?? string.Empty;
+                web1surname.Text = data.Field<string>("Author1SN") ?? string.Empty;
+                web2first.Text = data.Field<string>("Author2FN") ?? string.Empty;
+                web2surname.Text = data.Field<string>("Author2SN") ?? string.Empty;
+                web3first.Text = data.Field<string>("Author3FN") ?? string.Empty;
+                web3surname.Text = data.Field<string>("Author3SN") ?? string.Empty;
+                webpageYear.Text = data.Field<int>("Year").ToString();
+                webURL.Text = data.Field<string>("WebURL") ?? string.Empty;
+                accessDate.SelectedDateTime = DateTime.Parse(data.Field<string>("accessDate") ?? string.Empty);
+                blogSiteTitle.Text = data.Field<string>("blogSiteTitle") ?? string.Empty;
+                postedDate.SelectedDateTime = DateTime.Parse(data.Field<string>("postedDate") ?? string.Empty);
             }
         }
 
@@ -62,15 +63,14 @@ namespace RefCatalogue.Views
         {
             if (string.IsNullOrEmpty(blogSiteTitle.Text))
             {
-                string task = "dbo.Update_Website";
-                DateTime accessedDate = (DateTime)accessDate.SelectedDateTime;
-                TextBox Author1Surname = string.IsNullOrEmpty(organisation.Text) ? web1surname : organisation;
+                var accessedDate = (DateTime)accessDate.SelectedDateTime;
+                var author1Surname = string.IsNullOrEmpty(organisation.Text) ? web1surname : organisation;
 
-                TextBox[] requiredTextboxes = new TextBox[]
+                var requiredTextboxes = new[]
                 {
                     webArticleTitle,
                     web1first,
-                    Author1Surname,
+                    author1Surname,
                     webpageYear,
                     webURL
                 };
@@ -83,10 +83,10 @@ namespace RefCatalogue.Views
                 }
                 var websiteDetails = new Dictionary<string, string>
                 {
-                    { "id", refToUpdate.Field<int>("Id").ToString() },
+                    { "id", _refToUpdate.Field<int>("Id").ToString() },
                     { "webpagetitle", webArticleTitle.Text },
                     { "web1first", web1first.Text },
-                    { "web1last", Author1Surname.Text },
+                    { "web1last", author1Surname.Text },
                     { "web2first", web2first.Text },
                     { "web2last", web2surname.Text },
                     { "web3first", web3first.Text },
@@ -97,20 +97,21 @@ namespace RefCatalogue.Views
                 };
 
                 // Run update script
-                var result = dataProcessor.PushWebsiteDetailsToDatabase(websiteDetails, task);
+                var result = _dataProcessor.PushWebsiteDetailsToDatabase(websiteDetails, Task);
                 if (result == 1)
                 {
                     MessageBox.Show($"{webArticleTitle.Text} successfully updated.", "Update Website", MessageBoxButton.OK);
-                    NavigationService.GoBack();
+                    var updateRef = new UpdateRefPage(new DataProcessor());
+                    NavigationService?.Navigate(updateRef);
                 }
             }
             else
             {
-                string task = "dbo.Update_Blog";
-                DateTime accessedDate = (DateTime)accessDate.SelectedDateTime;
-                DateTime postDate = (DateTime)postedDate.SelectedDateTime;
+                
+                var accessedDate = (DateTime)accessDate.SelectedDateTime;
+                var postDate = (DateTime)postedDate.SelectedDateTime;
 
-                TextBox[] requiredTextboxes = new TextBox[]
+                var requiredTextboxes = new[]
                 {
                     webArticleTitle,
                     web1first,
@@ -128,7 +129,7 @@ namespace RefCatalogue.Views
                 }
                 var blogDetails = new Dictionary<string, string>
                 {
-                    { "id", refToUpdate.Field<int>("Id").ToString() },
+                    { "id", _refToUpdate.Field<int>("Id").ToString() },
                     { "articleTitle", webArticleTitle.Text },
                     { "web1first", web1first.Text },
                     { "web1last", web1surname.Text },
@@ -144,18 +145,18 @@ namespace RefCatalogue.Views
                 };
 
                 // Run update script
-                var result = dataProcessor.PushBlogDetailsToDatabase(blogDetails, task);
+                var result = _dataProcessor.PushBlogDetailsToDatabase(blogDetails, Task);
                 if (result == 1)
                 {
                     MessageBox.Show($"{webArticleTitle.Text} successfully updated.", "Update Blog", MessageBoxButton.OK);
-                    NavigationService.GoBack();
+                    NavigationService?.GoBack();
                 }
             }
         }
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
     }
 }

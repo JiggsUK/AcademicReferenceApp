@@ -28,4 +28,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="RefCatDb.mdf" />
+    <Content Include="RefCatDb.mdf" />
+  </ItemGroup>
+
 </Project>

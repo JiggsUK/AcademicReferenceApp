@@ -13,12 +13,13 @@ namespace RefCatalogue.Controllers
 
         int PushJournalDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
-        int PushRFCDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
+        int PushRfcDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
         int PushWebsiteDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
         int PushBlogDetailsToDatabase(Dictionary<string, string> bookDetails, string SqlCom);
 
         void DeleteReference(string id, string tableName);
+        DataView RetrieveAllReferences();
     }
 }

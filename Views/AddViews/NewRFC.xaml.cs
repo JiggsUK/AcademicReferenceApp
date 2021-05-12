@@ -1,19 +1,19 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.AddViews
 {
     /// <summary>
     /// Interaction logic for NewRFC.xaml
     /// </summary>
     public partial class NewRFC : Page
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
+        private readonly DataProcessor dataProcessor = new();
+        private  const string Task = "dbo.Add_RFC";
 
         public NewRFC()
         {
@@ -22,7 +22,7 @@ namespace RefCatalogue.Views
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
 
         private void Button_Click_Add(object sender, RoutedEventArgs e)
@@ -32,7 +32,7 @@ namespace RefCatalogue.Views
                 return;
             }
 
-            string task = "dbo.Add_RFC";
+           
 
             var rfcDetails = new Dictionary<string, string>
             {
@@ -49,7 +49,7 @@ namespace RefCatalogue.Views
                 { "accessDate", ((DateTime)accessDate.SelectedDateTime).ToString("dd MMMM yyyy")},
             };
 
-            var result = dataProcessor.PushRFCDetailsToDatabase(rfcDetails, task);
+            var result = dataProcessor.PushRfcDetailsToDatabase(rfcDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"Successfully added {RFCArticleTitle.Text}.", "Add New RFC", MessageBoxButton.OK);
@@ -64,7 +64,7 @@ namespace RefCatalogue.Views
                 MessageBox.Show("Accessed Date cannot be blank", "Missing Required Fields", MessageBoxButton.OK);
                 return true;
             }
-            TextBox[] requiredTextboxes = new TextBox[]
+            var requiredTextboxes = new[]
             {
                 RFCArticleTitle,
                 RFCYear,
@@ -72,7 +72,7 @@ namespace RefCatalogue.Views
                 RFCDocNumber
             };
 
-            List<string> errors = FormHelper.ValidateTextboxes(requiredTextboxes);
+            var errors = FormHelper.ValidateTextboxes(requiredTextboxes);
             if (errors.Any())
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Missing Required Fields", MessageBoxButton.OK);

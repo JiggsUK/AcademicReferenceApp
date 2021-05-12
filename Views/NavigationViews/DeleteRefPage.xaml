@@ -1,4 +1,4 @@
-﻿<Page x:Class="RefCatalogue.Views.DeleteRefPage"
+﻿<Page x:Class="RefCatalogue.Views.NavigationViews.DeleteRefPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -31,7 +31,7 @@
 
         <TextBlock Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF00ABA9" Width="600">Select the references you wish to delete from the list below.</TextBlock>
 
-        <DataGrid Name="refListData" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserResizeColumns="True" CanUserResizeRows="False" Width="auto" SelectionMode="Extended" SelectionUnit="FullRow" HeadersVisibility="All" AlternatingRowBackground="{StaticResource MahApps.Brushes.Accent4}" BorderBrush="{StaticResource MahApps.Brushes.Accent}">
+        <DataGrid Name="RefListData" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" IsReadOnly="True" CanUserResizeColumns="True" CanUserResizeRows="False" Width="auto" SelectionMode="Extended" SelectionUnit="FullRow" HeadersVisibility="All" AlternatingRowBackground="{StaticResource MahApps.Brushes.Accent4}" BorderBrush="{StaticResource MahApps.Brushes.Accent}">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
                     <Grid>

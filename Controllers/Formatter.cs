@@ -3,18 +3,17 @@ using System.Data;
 
 namespace RefCatalogue.Controllers
 {
-    internal class Formatter
+    internal static class Formatter
     {
         /// <summary>
         /// Create a list of reference entries, formatted to the correct styling (Uni of Suffolk Harvard style)
         /// </summary>
         /// <param name="referenceDetails"></param>
-        /// <returns>List<string> of correctly formatted reference entries</returns>
         public static string[,] FormatEntries(DataTable referenceDetails)
         {
-            string[,] references = new string[referenceDetails.Rows.Count, 2];
-            DataRow[] rows = referenceDetails.Select();
-            for (int i = 0; i <= referenceDetails.Rows.Count - 1; i++)
+            var references = new string[referenceDetails.Rows.Count, 2];
+            var rows = referenceDetails.Select();
+            for (var i = 0; i <= referenceDetails.Rows.Count - 1; i++)
             {
                 if (rows[i].Field<string>("RefType") == "Book")
                 {
@@ -38,7 +37,7 @@ namespace RefCatalogue.Controllers
                 }
                 else if (rows[i].Field<string>("RefType") == "RFC")
                 {
-                    FormatRFCEntry(references, rows, i);
+                    FormatRfcEntry(references, rows, i);
                 }
                 else
                 {
@@ -54,7 +53,7 @@ namespace RefCatalogue.Controllers
         {
             references[i, 0] = rows[i].Field<string>("RefType");
 
-            bool hasEdition = rows[i].Field<int>("Edition") > 0;
+            var hasEdition = rows[i].Field<int>("Edition") > 0;
             string ednSuffix;
 
             if (rows[i].Field<int>("Edition") == 1)
@@ -77,19 +76,19 @@ namespace RefCatalogue.Controllers
             string entry;
             if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
             }
             else if (rows[i].Field<string>("Author4SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}.{(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : " ")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
             }
             else
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}., {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. and {rows[i].Field<string>("Author4SN")}, {rows[i].Field<string>("Author4FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}. {(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : "")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}., {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. and {rows[i].Field<string>("Author4SN")}, {rows[i].Field<string>("Author4FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("BookTitle")}. {(hasEdition ? Convert.ToString($"{rows[i].Field<int>("Edition")}{ednSuffix} edn. ") : "")}{rows[i].Field<string>("PublisherLoc")}: {rows[i].Field<string>("Publisher")}.";
             }
 
             references[i, 1] = entry;
@@ -102,19 +101,19 @@ namespace RefCatalogue.Controllers
             string entry;
             if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else if (rows[i].Field<string>("Author4SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. et al. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. et al. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("ArticleTitle")}', {rows[i].Field<string>("JournalTitle")}, {rows[i].Field<int>("Volume")}({rows[i].Field<int>("PartNo")}), pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
 
             references[i, 1] = entry;
@@ -127,19 +126,19 @@ namespace RefCatalogue.Controllers
             string entry;
             if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else if (rows[i].Field<string>("Author4SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
             else
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. et al. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. et al. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("PaperTitle")}', {rows[i].Field<string>("ConfTitle")}{(string.IsNullOrEmpty(rows[i].Field<string>("ConfSubTitle")) ? "" : $": {rows[i].Field<string>("ConfSubTitle")}")}. {rows[i].Field<string>("ConfLocation")}, {rows[i].Field<string>("ConfDateFrom")}-{rows[i].Field<string>("ConfDateTo")}. {rows[i].Field<string>("PubLocation")}: {rows[i].Field<string>("Publisher")}, pp. {rows[i].Field<int>("PageFrom")}-{rows[i].Field<int>("PageTo")}.";
             }
 
             references[i, 1] = entry;
@@ -156,15 +155,15 @@ namespace RefCatalogue.Controllers
             }
             else if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else if (rows[i].Field<string>("Author3SN") != null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("WebpageTitle")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else
             {
@@ -181,36 +180,36 @@ namespace RefCatalogue.Controllers
             string entry;
             if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) '{rows[i].Field<string>("WebpageTitle")}', {rows[i].Field<string>("blogSiteTitle")}, {rows[i].Field<string>("postedDate")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
 
             references[i, 1] = entry;
         }
 
-        private static void FormatRFCEntry(string[,] references, DataRow[] rows, int i)
+        private static void FormatRfcEntry(string[,] references, DataRow[] rows, int i)
         {
             references[i, 0] = rows[i].Field<string>("RefType");
 
             string entry;
             if (rows[i].Field<string>("Author2SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else if (rows[i].Field<string>("Author3SN") == null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}. and {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else if (rows[i].Field<string>("Author3SN") != null)
             {
-                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN").Substring(0, 1)}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN").Substring(0, 1)}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN").Substring(0, 1)}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
+                entry = $"{rows[i].Field<string>("Author1SN")}, {rows[i].Field<string>("Author1FN")[..1]}., {rows[i].Field<string>("Author2SN")}, {rows[i].Field<string>("Author2FN")[..1]}. and {rows[i].Field<string>("Author3SN")}, {rows[i].Field<string>("Author3FN")[..1]}. ({rows[i].Field<int>("Year")}) {rows[i].Field<string>("RFCTitle")}. RFC {rows[i].Field<int>("RFCDocNumber")}. Available at: {rows[i].Field<string>("WebURL")} (Accessed: {rows[i].Field<string>("accessDate")}).";
             }
             else
             {
