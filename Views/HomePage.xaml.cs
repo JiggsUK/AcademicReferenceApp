@@ -1,13 +1,13 @@
 ﻿using RefCatalogue.Controllers;
 using System.Windows;
-using System.Windows.Controls;
+using RefCatalogue.Views.NavigationViews;
 
 namespace RefCatalogue.Views
 {
     /// <summary>
     /// Interaction logic for RefCatHome.xaml
     /// </summary>
-    public partial class RefCatHome : Page
+    public partial class RefCatHome
     {
         public RefCatHome()
         {
@@ -16,26 +16,26 @@ namespace RefCatalogue.Views
 
         private void ViewRefsClick(object sender, RoutedEventArgs e)
         {
-            ViewRef viewRefsPage = new ViewRef(new DataProcessor());
-            this.NavigationService.Navigate(viewRefsPage);
+            var viewRefsPage = new ViewRef(new DataProcessor());
+            NavigationService?.Navigate(viewRefsPage);
         }
 
         private void AddRefClick(object sender, RoutedEventArgs e)
         {
-            AddRefPage addRef = new AddRefPage();
-            this.NavigationService.Navigate(addRef);
+            var addRef = new AddRefPage();
+            NavigationService?.Navigate(addRef);
         }
 
         private void UpdateRefClick(object sender, RoutedEventArgs e)
         {
-            UpdateRefPage updateRef = new UpdateRefPage(new DataProcessor());
-            this.NavigationService.Navigate(updateRef);
+            var updateRef = new UpdateRefPage(new DataProcessor());
+            NavigationService?.Navigate(updateRef);
         }
 
         private void DeleteRefClick(object sender, RoutedEventArgs e)
         {
-            DeleteRefPage deleteRef = new DeleteRefPage(new DataProcessor());
-            this.NavigationService.Navigate(deleteRef);
+            var deleteRef = new DeleteRefPage(new DataProcessor());
+            NavigationService?.Navigate(deleteRef);
         }
     }
 }
