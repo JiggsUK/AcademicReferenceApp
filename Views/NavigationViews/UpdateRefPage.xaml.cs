@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using RefCatalogue.Views.UpdateViews;
 
 namespace RefCatalogue.Views
 {
@@ -78,7 +79,7 @@ namespace RefCatalogue.Views
                 }
                 else if (refUpdate.Field<string>("RefType") == "RFC")
                 {
-                    UpdateRFC updateRFCView = new UpdateRFC(refUpdate);
+                    UpdateRfc updateRFCView = new UpdateRfc(refUpdate);
                     this.NavigationService.Navigate(updateRFCView);
                 }
                 else

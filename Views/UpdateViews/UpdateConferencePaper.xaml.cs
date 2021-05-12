@@ -1,56 +1,56 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.UpdateViews
 {
     /// <summary>
     /// Interaction logic for UpdateConferencePaper.xaml
     /// </summary>
     public partial class UpdateConferencePaper : Page
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
-        private DataRow refToUpdate;
+        private readonly DataProcessor _dataProcessor = new();
+        private DataRow _refToUpdate;
+        private const string Task = "dbo.Update_ConfPaper";
 
-        public UpdateConferencePaper(DataRow refToUpdate)
+        public UpdateConferencePaper(DataRow selectedRow)
         {
             InitializeComponent();
-            this.refToUpdate = refToUpdate;
-            LoadTextboxData(refToUpdate);
+            _refToUpdate = selectedRow;
+            LoadTextboxData(selectedRow);
         }
 
-        private void LoadTextboxData(DataRow refToUpdate)
+        private void LoadTextboxData(DataRow data)
         {
-            paperTitle.Text = refToUpdate.Field<string>("PaperTitle");
-            CP1first.Text = refToUpdate.Field<string>("Author1FN");
-            CP1surname.Text = refToUpdate.Field<string>("Author1SN");
-            CP2first.Text = refToUpdate.Field<string>("Author2FN");
-            CP2surname.Text = refToUpdate.Field<string>("Author2SN");
-            CP3first.Text = refToUpdate.Field<string>("Author3FN");
-            CP3surname.Text = refToUpdate.Field<string>("Author3SN");
-            CP4first.Text = refToUpdate.Field<string>("Author4FN");
-            CP4surname.Text = refToUpdate.Field<string>("Author4SN");
-            confYear.Text = refToUpdate.Field<int>("Year").ToString();
-            confPub.Text = refToUpdate.Field<string>("Publisher");
-            confPubLoc.Text = refToUpdate.Field<string>("PubLocation");
-            confTitle.Text = refToUpdate.Field<int>("ConfTitle").ToString();
-            confSubTitle.Text = refToUpdate.Field<int>("ConfSubTitle").ToString();
-            confLoc.Text = refToUpdate.Field<int>("ConfLocation").ToString();
-            confDateFrom.SelectedDateTime = refToUpdate.Field<DateTime>("ConfDateFrom");
-            confDateTo.SelectedDateTime = refToUpdate.Field<DateTime>("ConfDateTo");
-            pageFrom.Text = refToUpdate.Field<int>("PageFrom").ToString();
-            pageTo.Text = refToUpdate.Field<int>("PageTo").ToString();
+            paperTitle.Text = data.Field<string>("PaperTitle") ?? string.Empty;
+            CP1first.Text = data.Field<string>("Author1FN") ?? string.Empty;
+            CP1surname.Text = data.Field<string>("Author1SN") ?? string.Empty;
+            CP2first.Text = data.Field<string>("Author2FN") ?? string.Empty;
+            CP2surname.Text = data.Field<string>("Author2SN") ?? string.Empty;
+            CP3first.Text = data.Field<string>("Author3FN") ?? string.Empty;
+            CP3surname.Text = data.Field<string>("Author3SN") ?? string.Empty;
+            CP4first.Text = data.Field<string>("Author4FN") ?? string.Empty;
+            CP4surname.Text = data.Field<string>("Author4SN") ?? string.Empty;
+            confYear.Text = data.Field<int>("Year").ToString();
+            confPub.Text = data.Field<string>("Publisher") ?? string.Empty;
+            confPubLoc.Text = data.Field<string>("PubLocation") ?? string.Empty;
+            confTitle.Text = data.Field<string>("ConfTitle")?? string.Empty;
+            confSubTitle.Text = data.Field<string>("ConfSubTitle")?? string.Empty;
+            confLoc.Text = data.Field<string>("ConfLocation")?? string.Empty;
+            confDateFrom.Text = data.Field<string>("ConfDateFrom") ?? string.Empty;
+            confDateTo.Text = data.Field<string>("ConfDateTo") ?? string.Empty;
+            pageFrom.Text = data.Field<int>("PageFrom").ToString();
+            pageTo.Text = data.Field<int>("PageTo").ToString();
         }
 
         private void Button_Click_Update(object sender, RoutedEventArgs e)
         {
-            string task = "dbo.Update_ConfPaper";
-            TextBox[] requiredTextboxes = new TextBox[]
+            
+            var requiredTextboxes = new[]
             {
                 paperTitle,
                 confTitle,
@@ -70,13 +70,10 @@ namespace RefCatalogue.Views
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Missing Required Fields", MessageBoxButton.OK);
                 return;
             }
-
-            DateTime dateFrom = (DateTime)confDateFrom.SelectedDateTime;
-            DateTime dateTo = (DateTime)confDateTo.SelectedDateTime;
-
+            
             var confPaperDetails = new Dictionary<string, string>
             {
-                { "id", refToUpdate.Field<int>("Id").ToString() },
+                { "id", _refToUpdate.Field<int>("Id").ToString() },
                 { "paperTitle", paperTitle.Text },
                 { "au1first", CP1first.Text },
                 { "au1last", CP1surname.Text },
@@ -90,8 +87,8 @@ namespace RefCatalogue.Views
                 { "confTitle", confTitle.Text },
                 { "confSubTitle", confSubTitle.Text },
                 { "confLoc", confLoc.Text },
-                { "confDateFrom", dateFrom.ToString("dd") }, // keep just the day
-                { "confDateTo", dateTo.ToString("dd MMMM") }, // discard the year
+                { "confDateFrom",confDateFrom.Text},
+                { "confDateTo", confDateTo.Text }, 
                 { "pageFrom", pageFrom.Text },
                 { "pageTo", pageTo.Text },
                 { "publisher", confPub.Text },
@@ -99,17 +96,18 @@ namespace RefCatalogue.Views
             };
 
             // Run update script
-            var result = dataProcessor.PushConfPaperDetailsToDatabase(confPaperDetails, task);
+            var result = _dataProcessor.PushConfPaperDetailsToDatabase(confPaperDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"{paperTitle.Text} successfully updated.", "Update Conference Paper", MessageBoxButton.OK);
-                NavigationService.GoBack();
+                var updateRef = new UpdateRefPage(new DataProcessor());
+                NavigationService?.Navigate(updateRef);
             }
         }
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
     }
 }

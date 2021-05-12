@@ -1,51 +1,51 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.UpdateViews
 {
     /// <summary>
     /// Interaction logic for UpdateJournal.xaml
     /// </summary>
     public partial class UpdateJournal : Page
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
-        private DataRow refToUpdate;
+        private readonly DataProcessor _dataProcessor = new();
+        private DataRow _refToUpdate;
+        private const string Task = "dbo.Update_Journal";
 
-        public UpdateJournal(DataRow refToUpdate)
+        public UpdateJournal(DataRow selectedRow)
         {
             InitializeComponent();
-            this.refToUpdate = refToUpdate;
-            LoadTextboxData(refToUpdate);
+            this._refToUpdate = selectedRow;
+            LoadTextboxData(_refToUpdate);
         }
 
-        private void LoadTextboxData(DataRow refToUpdate)
+        private void LoadTextboxData(DataRow data)
         {
-            articleTitle.Text = refToUpdate.Field<string>("PaperTitle");
-            JA1first.Text = refToUpdate.Field<string>("Author1FN");
-            JA1surname.Text = refToUpdate.Field<string>("Author1SN");
-            JA2first.Text = refToUpdate.Field<string>("Author2FN");
-            JA2surname.Text = refToUpdate.Field<string>("Author2SN");
-            JA3first.Text = refToUpdate.Field<string>("Author3FN");
-            JA3surname.Text = refToUpdate.Field<string>("Author3SN");
-            JA4first.Text = refToUpdate.Field<string>("Author4FN");
-            JA4surname.Text = refToUpdate.Field<string>("Author4SN");
-            journalYear.Text = refToUpdate.Field<int>("Year").ToString();
-            journalPartNo.Text = refToUpdate.Field<string>("PartNo");
-            journalVol.Text = refToUpdate.Field<string>("Volume");
-            pageFrom.Text = refToUpdate.Field<int>("PageFrom").ToString();
-            pageTo.Text = refToUpdate.Field<int>("PageTo").ToString();
+            articleTitle.Text = data.Field<string>("ArticleTitle") ?? string.Empty;
+            journalTitle.Text = data.Field<string>("JournalTitle") ?? string.Empty;
+            JA1first.Text = data.Field<string>("Author1FN") ?? string.Empty;
+            JA1surname.Text = data.Field<string>("Author1SN") ?? string.Empty;
+            JA2first.Text = data.Field<string>("Author2FN") ?? string.Empty;
+            JA2surname.Text = data.Field<string>("Author2SN") ?? string.Empty;
+            JA3first.Text = data.Field<string>("Author3FN") ?? string.Empty;
+            JA3surname.Text = data.Field<string>("Author3SN") ?? string.Empty;
+            JA4first.Text = data.Field<string>("Author4FN") ?? string.Empty;
+            JA4surname.Text = data.Field<string>("Author4SN") ?? string.Empty;
+            journalYear.Text = data.Field<int>("Year").ToString();
+            journalPartNo.Text = data.Field<int>("PartNo").ToString();
+            journalVol.Text = data.Field<int>("Volume").ToString();
+            pageFrom.Text = data.Field<int>("PageFrom").ToString();
+            pageTo.Text = data.Field<int>("PageTo").ToString();
         }
 
         private void Button_Click_Update(object sender, RoutedEventArgs e)
         {
-            string task = "dbo.Update_Journal";
-            TextBox[] requiredTextboxes = new TextBox[]
+            var requiredTextboxes = new[]
             {
                 articleTitle,
                 journalTitle,
@@ -66,7 +66,7 @@ namespace RefCatalogue.Views
 
             var journalDetails = new Dictionary<string, string>
             {
-                { "id", refToUpdate.Field<int>("Id").ToString() },
+                { "id", _refToUpdate.Field<int>("Id").ToString() },
                 { "articletitle", articleTitle.Text },
                 { "journaltitle", journalTitle.Text },
                 { "au1first", JA1first.Text },
@@ -85,17 +85,18 @@ namespace RefCatalogue.Views
             };
 
             // Run update script
-            var result = dataProcessor.PushJournalDetailsToDatabase(journalDetails, task);
+            var result = _dataProcessor.PushJournalDetailsToDatabase(journalDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"{articleTitle.Text} successfully updated.", "Update Journal", MessageBoxButton.OK);
-                NavigationService.GoBack();
+                var updateRef = new UpdateRefPage(new DataProcessor());
+                NavigationService?.Navigate(updateRef);
             }
         }
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
     }
 }
