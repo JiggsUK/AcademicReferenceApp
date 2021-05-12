@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using RefCatalogue.Controllers;
+using RefCatalogue.Views.NavigationViews;
 
 namespace RefCatalogue.Views.UpdateViews
 {
@@ -20,7 +21,7 @@ namespace RefCatalogue.Views.UpdateViews
         public UpdateWebArticle(DataRow selectedRow)
         {
             InitializeComponent();
-            this._refToUpdate = selectedRow;
+            _refToUpdate = selectedRow;
             LoadTextboxData(selectedRow);
         }
 

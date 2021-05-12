@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using RefCatalogue.Controllers;
+using RefCatalogue.Views.NavigationViews;
 
 namespace RefCatalogue.Views.UpdateViews
 {
@@ -20,7 +21,7 @@ namespace RefCatalogue.Views.UpdateViews
         public UpdateRfc(DataRow selectedRow)
         {
             InitializeComponent();
-            this._refToUpdate = selectedRow;
+            _refToUpdate = selectedRow;
             LoadTextboxData(selectedRow);
         }
 
@@ -75,7 +76,7 @@ namespace RefCatalogue.Views.UpdateViews
             };
 
             // Run update script
-            var result = _dataProcessor.PushRFCDetailsToDatabase(rfcDetails, Task);
+            var result = _dataProcessor.PushRfcDetailsToDatabase(rfcDetails, Task);
             if (result == 1)
             {
                 MessageBox.Show($"{RFCArticleTitle.Text} successfully updated.", "Update RFC", MessageBoxButton.OK);

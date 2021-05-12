@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using RefCatalogue.Controllers;
+using RefCatalogue.Views.AddViews;
 
 namespace RefCatalogue.Views.NavigationViews
 {

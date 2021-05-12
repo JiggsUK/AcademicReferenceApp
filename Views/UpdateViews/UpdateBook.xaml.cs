@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using RefCatalogue.Controllers;
+using RefCatalogue.Views.NavigationViews;
 
 namespace RefCatalogue.Views.UpdateViews
 {
