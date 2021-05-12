@@ -1,19 +1,19 @@
-﻿using RefCatalogue.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
+using RefCatalogue.Controllers;
 
-namespace RefCatalogue.Views
+namespace RefCatalogue.Views.AddViews
 {
     /// <summary>
     /// Interaction logic for NewWebsite.xaml
     /// </summary>
     public partial class NewWebArticle : Page
     {
-        private readonly DataProcessor dataProcessor = new DataProcessor();
+        private readonly DataProcessor dataProcessor = new();
+        private const string Task = "dbo.Add_Blog";
 
         public NewWebArticle()
         {
@@ -25,19 +25,19 @@ namespace RefCatalogue.Views
             if (string.IsNullOrEmpty(blogSiteTitle.Text))
             {
                 // Replace author1surname with organisation (if it is entered) to allow alphabetisation on View Refs
-                TextBox Author1Surname = string.IsNullOrEmpty(organisation.Text) ? web1surname : organisation;
+                var author1Surname = string.IsNullOrEmpty(organisation.Text) ? web1surname : organisation;
 
-                if (CheckForErrorsWeb(Author1Surname) == true)
+                if (CheckForErrorsWeb(author1Surname) == true)
                 {
                     return;
                 }
 
-                string task = "dbo.Add_Website";
+                var task = "dbo.Add_Website";
                 var websiteDetails = new Dictionary<string, string>
                 {
                     { "webpagetitle", webArticleTitle.Text },
                     { "web1first", web1first.Text },
-                    { "web1last", Author1Surname.Text },
+                    { "web1last", author1Surname.Text },
                     { "web2first", web2first.Text },
                     { "web2last", web2surname.Text },
                     { "web3first", web3first.Text },
@@ -61,7 +61,7 @@ namespace RefCatalogue.Views
                     return;
                 }
 
-                string task = "dbo.Add_Blog";
+                
 
                 var blogDetails = new Dictionary<string, string>
                 {
@@ -79,7 +79,7 @@ namespace RefCatalogue.Views
                     { "postedDate", ((DateTime)postedDate.SelectedDateTime).ToString("dd MMMM")}
                 };
 
-                var result = dataProcessor.PushBlogDetailsToDatabase(blogDetails, task);
+                var result = dataProcessor.PushBlogDetailsToDatabase(blogDetails, Task);
                 if (result == 1)
                 {
                     MessageBox.Show($"Successfully added {webArticleTitle.Text}.", "Update Blog", MessageBoxButton.OK);
@@ -90,10 +90,10 @@ namespace RefCatalogue.Views
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService?.GoBack();
         }
 
-        private bool CheckForErrorsWeb(TextBox Author1Surname)
+        private bool CheckForErrorsWeb(TextBox author1Surname)
         {
             if (accessDate.SelectedDateTime == null)
             {
@@ -101,16 +101,16 @@ namespace RefCatalogue.Views
                 return true;
             }
 
-            TextBox[] requiredTextboxes = new TextBox[]
+            var requiredTextboxes = new[]
                 {
                 webArticleTitle,
                 web1first,
-                Author1Surname,
+                author1Surname,
                 webpageYear,
                 webURL
                 };
 
-            List<string> errors = FormHelper.ValidateTextboxes(requiredTextboxes);
+            var errors = FormHelper.ValidateTextboxes(requiredTextboxes);
             if (errors.Any())
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Missing Required Fields", MessageBoxButton.OK);
@@ -133,7 +133,7 @@ namespace RefCatalogue.Views
                 MessageBox.Show("Posted Date cannot be blank", "Missing Required Fields", MessageBoxButton.OK);
                 return true;
             }
-            TextBox[] requiredTextboxes = new TextBox[]
+            var requiredTextboxes = new[]
             {
                 webArticleTitle,
                 web1first,
@@ -143,7 +143,7 @@ namespace RefCatalogue.Views
                 blogSiteTitle
             };
 
-            List<string> errors = FormHelper.ValidateTextboxes(requiredTextboxes);
+            var errors = FormHelper.ValidateTextboxes(requiredTextboxes);
             if (errors.Any())
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Missing Required Fields", MessageBoxButton.OK);
